@@ -19,10 +19,10 @@ jobs:
 
       - name: Listar arquivos do projeto
         run: |
-          echo "Verificando arquivos e pastas:"
+          echo "📁 Verificando arquivos e pastas:"
           ls -R
-          echo "Listando arquivos .java em $ROBOTS_JAVA_DIR:"
-          ls -l $ROBOTS_JAVA_DIR/*.java || echo "NÃO ACHOU .java EM $ROBOTS_JAVA_DIR"
+          echo "🔍 Listando arquivos .java em $ROBOTS_JAVA_DIR:"
+          ls -l $ROBOTS_JAVA_DIR/*.java || echo "⚠️ NÃO ACHOU .java EM $ROBOTS_JAVA_DIR"
 
       - name: Setup Java 11 (para Checkstyle e SpotBugs)
         uses: actions/setup-java@v4
@@ -74,11 +74,20 @@ jobs:
 
       - name: Listar conteúdo de battle_logs antes do upload
         run: |
-          echo "Arquivos em battle_logs/"
+          echo "📄 Arquivos em battle_logs/"
           ls -lh battle_logs/
-          cat battle_logs/report.html || echo "report.html não existe"
+          echo "📑 Conteúdo de report.html (se existir):"
+          cat battle_logs/report.html || echo "⚠️ report.html não existe"
 
-      - name: Upload battle logs (relatório incluído!)
+      - name: ✅ Exibir mensagem final de sucesso
+        if: ${{ success() }}
+        run: echo '✅ CI executado com sucesso! Todos os passos foram concluídos com êxito.'
+
+      - name: ❌ Exibir mensagem final de falha
+        if: ${{ failure() }}
+        run: echo '❌ CI falhou! Verifique os logs e corrija os erros.'
+
+      - name: 📤 Upload battle logs (relatório incluído!)
         if: always()
         uses: actions/upload-artifact@v4
         with:
